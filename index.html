@@ -5,7 +5,7 @@
         <script src="./js/ediable_table.js" type="module"></script>
     </head>
     <body>
-        <h1>Test of Smart Table WebBus controller</h1>
+        <h1>Test of Simple table inline CRUD operations</h1>
         <table border="1" width="100%" id="smart-table">
             <thead>
                 <tr>
@@ -78,6 +78,28 @@
 
             document.getElementById('get_data').addEventListener('click', (e) => {
                 console.log(table.get_values());
+            });
+
+            document.querySelector('#populate').addEventListener('click', (e) => {
+                const table_data = [
+                    {
+                        'index': 1,
+                        'field1': 987,
+                        'field2': 1.3333333,
+                        'field3': true,
+                        'field4': 'Some text dynamically set',
+                        'field5': '1'
+                    },
+                    {
+                        'index': 2,
+                        'field1': 654,
+                        'field2': 2.1234,
+                        'field3': false,
+                        'field4': 'Other text',
+                        'field5': '2'
+                    }
+                ];
+                table.set_rows(table_data);
             });
         </script>
     </body>

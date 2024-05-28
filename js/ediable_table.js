@@ -51,6 +51,7 @@ class EditableTable {
         for (let i = 0; i < els_rows.length; i++) {
             els_rows[i].appendChild(this.#create_edit_link());
         }
+        this.#top_index = 0;
         this.#find_top_index();
     }
 
@@ -87,11 +88,11 @@ class EditableTable {
     }
 
     new_row() {
-        find_top_index();
-        top_index += 1;
-        disable_enable_action_buttons(true);
-        build_new_row([]);
-        edit_new_row(true);
+        this.#find_top_index();
+        this.#top_index += 1;
+        this.#disable_enable_action_buttons(true);
+        this.#build_new_row([]);
+        this.#edit_new_row(true);
     }
 
     set_rows(rows) {
@@ -122,7 +123,7 @@ class EditableTable {
                 }
                 el_row.appendChild(el_cell);
             }
-            el_row.appendChild(create_edit_link());
+            el_row.appendChild(this.#create_edit_link());
             this.#el_table_body.appendChild(el_row);
         }
     }
@@ -155,7 +156,7 @@ class EditableTable {
                     values[d_name] = parseFloat(el_row.children[i].innerText);
                     break;
                 case 'bool':
-                    if (el_row.children[i].innerText == fields[d_name]['labels']['true']) {
+                    if (el_row.children[i].innerText == this.#fields[d_name]['labels']['true']) {
                         values[d_name] = true;
                     }
                     else {
@@ -181,8 +182,8 @@ class EditableTable {
     }
 
     #build_new_row(d) {
-        el_active_row = document.createElement('TR');
-        el_table_body.appendChild(el_active_row);
+        this.#el_active_row = document.createElement('TR');
+        this.#el_table_body.appendChild(this.#el_active_row);
         for (let i = 0; i < this.#els_table_headers.length; i++) {
             const new_cell = document.createElement('TD');
             if (i == this.#index_column) {
@@ -190,15 +191,15 @@ class EditableTable {
                     new_cell.innerText = parseInt(d[i]);
                 }
                 else {
-                    new_cell.innerText = top_index;
+                    new_cell.innerText = this.#top_index;
                 }
             }
             else if (d !== null && d.length >= this.#els_table_headers.length) {
                 new_cell.innerText = d[i];
             }
-            el_active_row.appendChild(new_cell);
+            this.#el_active_row.appendChild(new_cell);
         }
-        el_active_row.appendChild(create_edit_link());
+        this.#el_active_row.appendChild(this.#create_edit_link());
     }
 
     #build_form_element(idx, values) {
@@ -307,54 +308,54 @@ class EditableTable {
             }
         }
         
-        clear();
+        this.#clear();
     }
 
     #clear(clear_new) {
-        if (this.#el_edit_form !== null) {
+        if (this.#el_edit_form !== undefined) {
             this.#el_edit_form.remove();
         }
         if (clear_new === true) {
             this.#el_active_row.remove();
         }
-        else {
+        else if (this.#el_active_row !== undefined) {
             this.#el_active_row.style.display = 'table-row';
         }
-        this.#el_edit_form = null;
-        this.#el_active_row = null;
+        this.#el_edit_form = undefined;
+        this.#el_active_row = undefined;
     }
 
     #edit_new_row(is_new) {
         this.#el_active_row.style.display = 'none';
         // Get the row index
-        const row_index = this.#getChildElementIndex(el_active_row);
+        const row_index = this.#getChildElementIndex(this.#el_active_row);
         // Extract the existing values
         const raw_values = [];
         for (let i = 0; i < this.#el_active_row.children.length - 1; i++) {
             raw_values.push(this.#el_active_row.children[i].innerText);
         }
         // Insert form row
-        el_edit_form = el_table_body.insertRow(row_index);
+        this.#el_edit_form = this.#el_table_body.insertRow(row_index);
         // Build form cells
         for (let i = 0; i < this.#el_active_row.children.length - 1; i++) {
             const el_cell = document.createElement('TD');
-            el_cell.appendChild(build_form_element(i, raw_values));
-            el_edit_form.appendChild(el_cell);
+            el_cell.appendChild(this.#build_form_element(i, raw_values));
+            this.#el_edit_form.appendChild(el_cell);
         }
         // Save and Cancle buttons
         const el_action_container = document.createElement('TD');
         el_action_container.classList.add('_smart-table__actions-container');
         const el_save = document.createElement('BUTTON');
-        el_save.addEventListener('click', this.#save_row_clicked);
-        el_save.innerText = params.labels.save;
+        el_save.addEventListener('click', this.#save_row_clicked.bind(this));
+        el_save.innerText = this.#labels.save;
         const el_cancel = document.createElement('BUTTON');
         if (is_new === true) {
-            el_cancel.addEventListener('click', this.#cancel_new_clicked);
+            el_cancel.addEventListener('click', this.#cancel_new_clicked.bind(this));
         }
         else {
-            el_cancel.addEventListener('click', this.#cancle_clicked);
+            el_cancel.addEventListener('click', this.#cancle_clicked.bind(this));
         }
-        el_cancel.innerText = params.labels.cancel;
+        el_cancel.innerText = this.#labels.cancel;
         el_action_container.appendChild(el_save);
         el_action_container.appendChild(el_cancel);
         this.#el_edit_form.appendChild(el_action_container);
@@ -363,16 +364,16 @@ class EditableTable {
     #find_top_index() {
         // Find the index column
         const els_rows = this.#el_table.querySelectorAll("table tbody tr");
-        for (let i = 0; i < els_table_headers.length; i++) {
+        for (let i = 0; i < this.#els_table_headers.length; i++) {
             if (this.#els_table_headers[i].dataset.type == "index") {
-                index_column = i;
+                this.#index_column = i;
                 break;
             }
         }
         // Find the largest index
         for (let i = 0; i < els_rows.length; i++) {
-            const row_index = parseInt(els_rows[i].children[index_column].innerText);
-            if (row_index > top_index) top_index = row_index;
+            const row_index = parseInt(els_rows[i].children[this.#index_column].innerText);
+            if (row_index > this.#top_index) this.#top_index = row_index;
         }
     }
 
@@ -389,11 +390,11 @@ class EditableTable {
         const el_edit_button = document.createElement("BUTTON");
         el_edit_button.classList.add('_action_buttons');
         el_edit_button.innerText = this.#labels.edit;
-        el_edit_button.addEventListener('click', this.#edit_clicked);
+        el_edit_button.addEventListener('click', this.#edit_clicked.bind(this));
         const el_delete_button = document.createElement("BUTTON");
         el_delete_button.classList.add('_action_buttons');
         el_delete_button.innerText = this.#labels.delete;
-        el_delete_button.addEventListener('click', this.#delete_clicked);
+        el_delete_button.addEventListener('click', this.#delete_clicked.bind(this));
         el_cell.appendChild(el_edit_button);
         el_cell.appendChild(el_delete_button);
         return el_cell;
@@ -403,7 +404,7 @@ class EditableTable {
     #edit_clicked(e) {
         this.#disable_enable_action_buttons(true);
         // Make sure only one edit can be active
-        if (this.#el_active_row !== null) clear();
+        if (this.#el_active_row !== undefined) this.#clear();
         // Get the row element
         this.#el_active_row = e.currentTarget.parentNode.parentNode;
         this.#edit_new_row(false);
@@ -426,10 +427,10 @@ class EditableTable {
     }
 
     #delete_clicked(e) {
-        const answer = confirm(params.labels.confirm);
+        const answer = confirm(this.#labels.confirm);
         if (answer) {
             const row = e.currentTarget.parentNode.parentNode;
-            const idx = parseInt(row.children[index_column].innerText);
+            const idx = parseInt(row.children[this.#index_column].innerText);
             row.remove();
             if (this.#cb_deleted) this.#cb_deleted(idx);
         }
