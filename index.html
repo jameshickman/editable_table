@@ -71,6 +71,14 @@
                     }
                 }
             );
+
+            document.getElementById('add').addEventListener('click', (e) => {
+                table.new_row();
+            });
+
+            document.getElementById('get_data').addEventListener('click', (e) => {
+                console.log(table.get_values());
+            });
         </script>
     </body>
 </html>

@@ -327,7 +327,7 @@ class EditableTable {
     #edit_new_row(is_new) {
         this.#el_active_row.style.display = 'none';
         // Get the row index
-        const row_index = getChildElementIndex(el_active_row);
+        const row_index = this.#getChildElementIndex(el_active_row);
         // Extract the existing values
         const raw_values = [];
         for (let i = 0; i < this.#el_active_row.children.length - 1; i++) {
