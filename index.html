@@ -47,8 +47,10 @@
 
             const table = new EditableTable(
                 document.getElementById('smart-table'),
-                (data) => {
+                (is_new, index, data) => {
+                    console.log(index);
                     console.log(data);
+                    if (is_new) table.override_id(index, index + 2);
                 },
                 (index) => {
                     console.log(index);

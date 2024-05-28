@@ -9,6 +9,8 @@ class EditableTable {
     #fields;
     #labels;
 
+    #is_new;
+
     #cb_saved;
     #cb_deleted;
 
@@ -53,6 +55,19 @@ class EditableTable {
         }
         this.#top_index = 0;
         this.#find_top_index();
+        this.#is_new = false;
+    }
+
+    override_id(old_id, new_id) {
+        const els_rows = this.#el_table_body.querySelectorAll('TR');
+        for (let i = 0; i < els_rows.length; i++) {
+            const el_idx = els_rows[i].children[this.#index_column];
+            if (el_idx.innerText == old_id) {
+                el_idx.innerText = new_id;
+                break;
+            }
+        }
+        this.#find_top_index();
     }
 
     set_labels(t_edit, t_delete, t_confirmationm, t_save, t_cancel) {
@@ -83,11 +98,13 @@ class EditableTable {
     }
 
     add_row(row) {
+        this.#is_new = true;
         this.#build_new_row(row);
         this.#find_top_index();
     }
 
     new_row() {
+        this.#is_new = true;
         this.#find_top_index();
         this.#top_index += 1;
         this.#disable_enable_action_buttons(true);
@@ -257,6 +274,7 @@ class EditableTable {
     }
 
     #save_row() {
+        let index = 0;
         let payload = {};
         const els_cells = this.#el_edit_form.querySelectorAll("td");
         for (let i = 0 ; i < this.#els_table_headers.length; i++) {
@@ -296,16 +314,14 @@ class EditableTable {
                     payload[d_name] = key;
                     break;
                 case 'index':
-                    payload[d_name] = parseInt(this.#el_edit_form.children[i].querySelector('span').innerText);
+                    index = parseInt(this.#el_edit_form.children[i].querySelector('span').innerText);
+                    payload[d_name] = index;
                     break;
             }
         }
 
         if (this.#cb_saved) {
-            const row_id = this.#cb_saved(payload);
-            if (Number.isInteger(row_id)) {
-                this.#el_active_row.children[index_column].innerText = parseInt(row_id);
-            }
+            const row_id = this.#cb_saved(this.#is_new, index, payload);
         }
         
         this.#clear();
@@ -402,6 +418,7 @@ class EditableTable {
 
     // UI callbacks
     #edit_clicked(e) {
+        this.#is_new = false;
         this.#disable_enable_action_buttons(true);
         // Make sure only one edit can be active
         if (this.#el_active_row !== undefined) this.#clear();
