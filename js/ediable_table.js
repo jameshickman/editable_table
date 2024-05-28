@@ -114,6 +114,15 @@ class EditableTable {
         }
     }
 
+    get_table_values = function() {
+        const els_rows = this.#el_table.querySelectorAll("table tbody tr");
+        let values = [];
+        for (let i = 0; i < els_rows.length; i++) {
+            values.push(this.#decode_row(els_rows[i]));
+        }
+        return values;
+    }
+
     // Internal methods
     #getChildElementIndex(node) {
         return Array.prototype.indexOf.call(node.parentNode.children, node);
