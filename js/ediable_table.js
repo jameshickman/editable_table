@@ -81,6 +81,19 @@ class EditableTable {
         };
     }
 
+    add_row(row) {
+        this.#build_new_row(row);
+        this.#find_top_index();
+    }
+
+    new_row() {
+        find_top_index();
+        top_index += 1;
+        disable_enable_action_buttons(true);
+        build_new_row([]);
+        edit_new_row(true);
+    }
+
     set_rows(rows) {
         const els_rows = this.#el_table.querySelectorAll("table tbody tr");
         for (let i = 0; i < els_rows.length; i++) {
@@ -114,7 +127,7 @@ class EditableTable {
         }
     }
 
-    get_table_values = function() {
+    get_values = function() {
         const els_rows = this.#el_table.querySelectorAll("table tbody tr");
         let values = [];
         for (let i = 0; i < els_rows.length; i++) {
