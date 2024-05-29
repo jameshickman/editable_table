@@ -17,6 +17,18 @@ class EditableTable {
     #cb_edit_start;
     #cb_edit_end;
 
+    /**
+     * Constructor for CRUD operations on an HTML table.
+     * 
+     * Configuration:
+     *      fields: Definitions for field types that require additional metadata for checkbox and select controls
+     *      labels: optional, set of label strings for edit, delete, delete confirmation, save, and cancel buttons.
+     * 
+     * @param {HTMLElement} el 
+     * @param {CallableFunction} cb_saved 
+     * @param {CallableFunction} cb_deleted 
+     * @param {Object} config 
+     */
     constructor(
         el, 
         cb_saved,
@@ -58,6 +70,9 @@ class EditableTable {
         this.#is_new = false;
     }
 
+    /**
+     * Create the edit and delte buttons for each row in the table
+     */
     build_edit_buttons() {
         const els_rows = this.#el_table.querySelectorAll("tbody tr");
         for (let i = 0; i < els_rows.length; i++) {
@@ -65,11 +80,20 @@ class EditableTable {
         }
     }
 
+    /**
+     * Reset and empty the table and clear any editing operations
+     */
     reset() {
         this.#clear(false);
         this.#empty();
     }
 
+    /**
+     * 
+     * @param {Integer} old_id The ID number of the row to alter
+     * @param {Integer} new_id Override to replace the ID field of the row
+     * @param {Object} updates Object of values to replace in any column, key the name of the column
+     */
     override_id(old_id, new_id, updates) {
         const els_rows = this.#el_table_body.querySelectorAll('TR');
         let el_idx = 0;
@@ -94,6 +118,15 @@ class EditableTable {
         this.#find_top_index();
     }
 
+    /**
+     * Set the button labels and delete confirm message
+     * 
+     * @param {string} t_edit 
+     * @param {string} t_delete 
+     * @param {string} t_confirmationm 
+     * @param {string} t_save 
+     * @param {string} t_cancel 
+     */
     set_labels(t_edit, t_delete, t_confirmationm, t_save, t_cancel) {
         this.#labels = {
             "edit": t_edit,
@@ -104,6 +137,13 @@ class EditableTable {
         };
     }
 
+    /**
+     * Set the labels for a checkbox column
+     * 
+     * @param {*} field Name of the field
+     * @param {*} yes_label Label string for yes
+     * @param {*} no_label Label string for no
+     */
     set_yes_no(field, yes_label, no_label) {
         if (yes_label === undefined) yes_label = "Yes";
         if (no_label === undefined) no_label = "No";
@@ -115,18 +155,32 @@ class EditableTable {
         };
     }
 
+    /**
+     * Set the options for a select element
+     * 
+     * @param {string} field Name of the column
+     * @param {Object} options Key value pairs for the options
+     */
     set_select_options(field, options) {
         this.#fields[field] = {
             "options": options
         };
     }
 
+    /**
+     * Add a row to the end of the table
+     * 
+     * @param {Object} row key value set, keys are the names of the columns
+     */
     add_row(row) {
         this.#is_new = true;
         this.#build_new_row(row);
         this.#find_top_index();
     }
 
+    /**
+     * Add a new row to the end of the table and open it in edit mode
+     */
     new_row() {
         this.#is_new = true;
         this.#find_top_index();
@@ -136,6 +190,11 @@ class EditableTable {
         this.#edit_new_row(true);
     }
 
+    /**
+     * Pass an array of objects to populate the table.
+     * 
+     * @param {Array<Object>} rows 
+     */
     set_rows(rows) {
         this.#empty();
         for (let i = 0; i < rows.length; i++) {
@@ -166,6 +225,11 @@ class EditableTable {
         }
     }
 
+    /**
+     * Get an array of objects of the balues in the table
+     * 
+     * @returns Array<Object> data in the table
+     */
     get_values() {
         const els_rows = this.#el_table.querySelectorAll("table tbody tr");
         let values = [];
@@ -175,6 +239,12 @@ class EditableTable {
         return values;
     }
 
+    /**
+     * Callbacks to be informed when entering and exiting the editor mode
+     * 
+     * @param {CallableFunction} cb_start Called when the edit mode starts
+     * @param {CallableFunction} cb_end   Called ehwn the edit mode ends
+     */
     set_edit_callbacks(cb_start, cb_end) {
         this.#cb_edit_start = cb_start;
         this.#cb_edit_end = cb_end;
