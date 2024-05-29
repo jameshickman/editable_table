@@ -126,15 +126,15 @@ class EditableTable {
      * 
      * @param {string} t_edit 
      * @param {string} t_delete 
-     * @param {string} t_confirmationm 
+     * @param {string} t_confirmation 
      * @param {string} t_save 
      * @param {string} t_cancel 
      */
-    set_labels(t_edit, t_delete, t_confirmationm, t_save, t_cancel) {
+    set_labels(t_edit, t_delete, t_confirmation, t_save, t_cancel) {
         this.#labels = {
             "edit": t_edit,
             "delete": t_delete,
-            "confirm": t_confirmationm,
+            "confirm": t_confirmation,
             "save": t_save,
             "cancel": t_cancel
         };
