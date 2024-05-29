@@ -89,8 +89,11 @@ class EditableTable {
     }
 
     /**
+     * Replace the row ID, for the case where the server returns a real ID from the database.
+     * As well as replacement values for any other column, useful if there is a UUID columm
+     * where the value is server generated.
      * 
-     * @param {Integer} old_id The ID number of the row to alter
+     * @param {Integer} old_id The ID number of the row to alter as it is in the table
      * @param {Integer} new_id Override to replace the ID field of the row
      * @param {Object} updates Object of values to replace in any column, key the name of the column
      */
