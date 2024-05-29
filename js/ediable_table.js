@@ -205,6 +205,8 @@ class EditableTable {
                         }
                     }
                     break;
+                default:
+                    values[d_name] = el_row.children[i].innerText;
             }
         }
         return values;
@@ -329,6 +331,8 @@ class EditableTable {
                     index = parseInt(this.#el_edit_form.children[i].querySelector('span').innerText);
                     payload[d_name] = index;
                     break;
+                default:
+                    payload[d_name] = this.#el_edit_form.children[i].innerText;
             }
         }
 
