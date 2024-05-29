@@ -14,6 +14,9 @@ class EditableTable {
     #cb_saved;
     #cb_deleted;
 
+    #cb_edit_start;
+    #cb_edit_end;
+
     constructor(
         el, 
         cb_saved,
@@ -170,6 +173,11 @@ class EditableTable {
             values.push(this.#decode_row(els_rows[i]));
         }
         return values;
+    }
+
+    set_edit_callbacks(cb_start, cb_end) {
+        this.#cb_edit_start = cb_start;
+        this.#cb_edit_end = cb_end;
     }
 
     // Internal methods
@@ -405,6 +413,8 @@ class EditableTable {
         el_action_container.appendChild(el_save);
         el_action_container.appendChild(el_cancel);
         this.#el_edit_form.appendChild(el_action_container);
+
+        if (typeof this.#cb_edit_start == 'function') this.#cb_edit_start();
     }
 
     #find_top_index() {
@@ -460,17 +470,20 @@ class EditableTable {
     #save_row_clicked(e) {
         this.#save_row();
         this.#disable_enable_action_buttons(false);
+        if (typeof this.#cb_edit_end == "function") this.#cb_edit_end();
     }
 
     #cancle_clicked() {
         this.#clear(false);
         this.#disable_enable_action_buttons(false);
+        if (typeof this.#cb_edit_end == "function") this.#cb_edit_end();
     }
 
     #cancel_new_clicked() {
         this.#top_index -= 1;
         this.#clear(true);
         this.#disable_enable_action_buttons(false);
+        if (typeof this.#cb_edit_end == "function") this.#cb_edit_end();
     }
 
     #delete_clicked(e) {

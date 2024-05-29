@@ -90,15 +90,18 @@
                 }
             );
 
-            document.getElementById('add').addEventListener('click', (e) => {
+            const el_add = document.getElementById('add');
+            el_add.addEventListener('click', (e) => {
                 table.new_row();
             });
 
-            document.getElementById('get_data').addEventListener('click', (e) => {
+            const el_get_data = document.getElementById('get_data');
+            el_get_data.addEventListener('click', (e) => {
                 console.log(table.get_values());
             });
 
-            document.querySelector('#populate').addEventListener('click', (e) => {
+            const el_populate = document.querySelector('#populate');
+            el_populate.addEventListener('click', (e) => {
                 const table_data = [
                     {
                         'index': 1,
@@ -119,6 +122,19 @@
                 ];
                 table.set_rows(table_data);
             });
+
+            table.set_edit_callbacks(
+                () => {
+                    el_add.disabled = true;
+                    el_get_data.disabled = true;
+                    el_populate.disabled = true;
+                },
+                () => {
+                    el_add.disabled = false;
+                    el_get_data.disabled = false;
+                    el_populate.disabled = false;
+                }
+            );
         </script>
     </body>
 </html>
