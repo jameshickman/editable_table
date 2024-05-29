@@ -24,7 +24,7 @@ class EditableTable {
      *      fields: Definitions for field types that require additional metadata for checkbox and select controls
      *      labels: optional, set of label strings for edit, delete, delete confirmation, save, and cancel buttons.
      * 
-     * @param {HTMLElement} el 
+     * @param {HTMLElement} el                  The HTML Table
      * @param {CallableFunction} cb_saved       Callback when row is saved, passed flag indicating a new row, row index, and row data
      * @param {CallableFunction} cb_deleted     Callback on delete, passed the row ID
      * @param {Object} config                   Configuration object
