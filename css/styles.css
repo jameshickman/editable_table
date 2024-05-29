@@ -9,6 +9,8 @@ html {
 
 #smart-table td {
     border-bottom: 1px solid #cccccc;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 .table__inline-edit-form {
