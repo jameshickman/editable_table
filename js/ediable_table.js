@@ -56,7 +56,9 @@ class EditableTable {
                     "delete": "Delete",
                     "confirm": "Are you sure you want to delete this row?",
                     "save": "Save",
-                    "cancel": "Cancel"
+                    "cancel": "Cancel",
+                    "yes": "Yes",
+                    "no": "No"
                 };
             }
         }
@@ -129,14 +131,18 @@ class EditableTable {
      * @param {string} t_confirmation 
      * @param {string} t_save 
      * @param {string} t_cancel 
+     * @param {string} t_yes
+     * @param {string} t_no
      */
-    set_labels(t_edit, t_delete, t_confirmation, t_save, t_cancel) {
+    set_labels(t_edit, t_delete, t_confirmation, t_save, t_cancel, t_yes, t_no) {
         this.#labels = {
             "edit": t_edit,
             "delete": t_delete,
             "confirm": t_confirmation,
             "save": t_save,
-            "cancel": t_cancel
+            "cancel": t_cancel,
+            "yes": t_yes,
+            "no": t_no
         };
     }
 
@@ -560,13 +566,66 @@ class EditableTable {
     }
 
     #delete_clicked(e) {
-        const answer = confirm(this.#labels.confirm);
-        if (answer) {
-            const row = e.currentTarget.parentNode.parentNode;
-            const idx = parseInt(row.children[this.#index_column].innerText);
-            row.remove();
-            if (this.#cb_deleted) this.#cb_deleted(idx);
-        }
+        const row = e.currentTarget.parentNode.parentNode;
+        row.classList.add('table__row-to-delete');
+        this.#dialog_confirm(
+            this.#labels.confirm,
+            () => {
+                const idx = parseInt(row.children[this.#index_column].innerText);
+                row.remove();
+                if (this.#cb_deleted) this.#cb_deleted(idx);
+            },
+            () => {
+                row.classList.remove('table__row-to-delete');
+            }
+        )
+    }
+
+    // Utility operations for dialogs, etc.
+    #dialog_confirm(message, cb_yes, cb_no) {
+        const el_dialog = document.createElement('DIV');
+        el_dialog.style['position'] = 'fixed';
+        el_dialog.style['top'] = '0';
+        el_dialog.style['bottom'] = '0';
+        el_dialog.style['left'] = '0';
+        el_dialog.style['right'] = '0';
+        el_dialog.style['z-index'] = '99999';
+        el_dialog.style['display'] = 'flex';
+        el_dialog.style['align-items'] = 'center';
+        el_dialog.style['justify-content'] = 'center';
+        el_dialog.style['background-color'] = 'rgba(0, 0, 0, 0.5)';
+        const el_popup = document.createElement('DIV');
+        el_popup.style['background-color'] = 'white';
+        el_popup.style['min-width'] = '300px';
+        el_popup.style['padding'] = '21px';
+        el_popup.style['border-radius'] = '17px';
+        const el_message_container = document.createElement('P');
+        el_message_container.innerText = message;
+        const el_button_container = document.createElement('DIV');
+        el_button_container.style['display'] = 'flex';
+        el_button_container.style['justify-content'] = 'flex-end';
+        el_button_container.style['gap'] = '5px';
+        el_button_container.style['margin-top'] = '21px';
+        const el_button_yes = document.createElement('BUTTON');
+        el_button_yes.classList.add("dialog__button-yes");
+        el_button_yes.innerText = this.#labels.yes;
+        el_button_yes.addEventListener('click', () => {
+            el_dialog.remove();
+            cb_yes();
+        });
+        const el_button_no = document.createElement('BUTTON');
+        el_button_no.classList.add('dialog__button-no');
+        el_button_no.innerText = this.#labels.no;
+        el_button_no.addEventListener('click', () => {
+            el_dialog.remove();
+            cb_no();
+        });
+        el_button_container.appendChild(el_button_yes);
+        el_button_container.appendChild(el_button_no);
+        el_popup.appendChild(el_message_container);
+        el_popup.appendChild(el_button_container);
+        el_dialog.appendChild(el_popup);
+        document.body.appendChild(el_dialog);
     }
 }
 
