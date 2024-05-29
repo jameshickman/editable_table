@@ -58,15 +58,27 @@ class EditableTable {
         this.#is_new = false;
     }
 
-    override_id(old_id, new_id) {
+    override_id(old_id, new_id, updates) {
         const els_rows = this.#el_table_body.querySelectorAll('TR');
+        let el_idx = 0;
+        let row_index = 0;
         for (let i = 0; i < els_rows.length; i++) {
-            const el_idx = els_rows[i].children[this.#index_column];
+            el_idx = els_rows[i].children[this.#index_column];
             if (el_idx.innerText == old_id) {
+                row_index = i;
                 el_idx.innerText = new_id;
                 break;
             }
         }
+        if (updates !== undefined) {
+            for (let i = 0; i < this.#els_table_headers.length - 1; i++) {
+                 const var_name = this.#els_table_headers[i].dataset['name'];
+                 if (updates.hasOwnProperty(var_name)) {
+                    els_rows[row_index].children[i].innerText = updates[var_name];
+                 }
+            }
+        }
+        this.#disable_enable_action_buttons(false);
         this.#find_top_index();
     }
 
@@ -320,11 +332,11 @@ class EditableTable {
             }
         }
 
+        this.#clear();
+
         if (this.#cb_saved) {
             const row_id = this.#cb_saved(this.#is_new, index, payload);
         }
-        
-        this.#clear();
     }
 
     #clear(clear_new) {

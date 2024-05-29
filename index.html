@@ -10,6 +10,7 @@
             <thead>
                 <tr>
                     <th data-type="index" data-name="index">Row index</th>
+                    <th data-type="" data-name="uid">UUID</th>
                     <th data-type="int" data-name="field1">Integer</th>
                     <th data-type="float" data-name="field2">Floaing point</th>
                     <th data-type="bool" data-name="field3">Boolean</th>
@@ -20,6 +21,7 @@
             <tbody>
                 <tr>
                     <td>1</td>
+                    <td>78761a4d-28fa-4072-93ce-c8131f3749d5</td>
                     <td>123</td>
                     <td>3.14159</td>
                     <td>Yes</td>
@@ -28,6 +30,7 @@
                 </tr>
                 <tr>
                     <td>2</td>
+                    <td>78761a4d-28fa-4072-93ce-c8131f3749d5</td>
                     <td>456</td>
                     <td>1.41421356237</td>
                     <td>No</td>
@@ -45,12 +48,24 @@
         <script type="module">
             import EditableTable from './js/ediable_table.js'
 
+            function uuidv4() {
+                return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+                    (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+                );
+            }
+
             const table = new EditableTable(
                 document.getElementById('smart-table'),
                 (is_new, index, data) => {
                     console.log(index);
                     console.log(data);
-                    if (is_new) table.override_id(index, index + 2);
+                    if (is_new) table.override_id(
+                        index,
+                        index + 2,
+                        {
+                            'uid': uuidv4()
+                        }
+                    );
                 },
                 (index) => {
                     console.log(index);
