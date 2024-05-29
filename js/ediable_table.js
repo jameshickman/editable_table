@@ -143,9 +143,9 @@ class EditableTable {
     /**
      * Set the labels for a checkbox column
      * 
-     * @param {*} field Name of the field
-     * @param {*} yes_label Label string for yes
-     * @param {*} no_label Label string for no
+     * @param {string} field Name of the field
+     * @param {string} yes_label Label string for yes
+     * @param {string} no_label Label string for no
      */
     set_yes_no(field, yes_label, no_label) {
         if (yes_label === undefined) yes_label = "Yes";
