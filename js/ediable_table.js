@@ -166,7 +166,7 @@ class EditableTable {
         }
     }
 
-    get_values = function() {
+    get_values() {
         const els_rows = this.#el_table.querySelectorAll("table tbody tr");
         let values = [];
         for (let i = 0; i < els_rows.length; i++) {
