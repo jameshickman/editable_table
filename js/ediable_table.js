@@ -48,14 +48,27 @@ class EditableTable {
         // Add column for the edit button
         const header = el.querySelector("thead tr");
         const new_header = document.createElement("TH");
-        const els_rows = el.querySelectorAll("tbody tr");
         header.appendChild(new_header);
-        for (let i = 0; i < els_rows.length; i++) {
-            els_rows[i].appendChild(this.#create_edit_link());
-        }
+        this.build_edit_buttons();
+        // const els_rows = el.querySelectorAll("tbody tr");
+        // for (let i = 0; i < els_rows.length; i++) {
+        //    els_rows[i].appendChild(this.#create_edit_link());
+        // }
         this.#top_index = 0;
         this.#find_top_index();
         this.#is_new = false;
+    }
+
+    build_edit_buttons() {
+        const els_rows = this.#el_table.querySelectorAll("tbody tr");
+        for (let i = 0; i < els_rows.length; i++) {
+            els_rows[i].appendChild(this.#create_edit_link());
+        }
+    }
+
+    reset() {
+        this.#clear(false);
+        this.#empty();
     }
 
     override_id(old_id, new_id, updates) {
@@ -125,10 +138,7 @@ class EditableTable {
     }
 
     set_rows(rows) {
-        const els_rows = this.#el_table.querySelectorAll("table tbody tr");
-        for (let i = 0; i < els_rows.length; i++) {
-            els_rows[i].remove();
-        }
+        this.#empty();
         for (let i = 0; i < rows.length; i++) {
             const el_row = document.createElement('TR');
             for (let j = 0; j < this.#els_table_headers.length; j++) {
@@ -169,6 +179,13 @@ class EditableTable {
     // Internal methods
     #getChildElementIndex(node) {
         return Array.prototype.indexOf.call(node.parentNode.children, node);
+    }
+
+    #empty() {
+        const els_rows = this.#el_table.querySelectorAll("table tbody tr");
+        for (let i = 0; i < els_rows.length; i++) {
+            els_rows[i].remove();
+        }
     }
 
     #decode_row(el_row) {
