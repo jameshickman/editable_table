@@ -50,10 +50,6 @@ class EditableTable {
         const new_header = document.createElement("TH");
         header.appendChild(new_header);
         this.build_edit_buttons();
-        // const els_rows = el.querySelectorAll("tbody tr");
-        // for (let i = 0; i < els_rows.length; i++) {
-        //    els_rows[i].appendChild(this.#create_edit_link());
-        // }
         this.#top_index = 0;
         this.#find_top_index();
         this.#is_new = false;
