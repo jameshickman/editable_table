@@ -2,6 +2,19 @@ html {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+#smart-table th {
+    color: white;
+    background-color: black;
+}
+
+#smart-table td {
+    border-bottom: 1px solid #cccccc;
+}
+
+.table__inline-edit-form {
+    background-color: orange !important;
+}
+
 #smart-table th:nth-child(1),
 #smart-table th:nth-child(2) {
     display: none;
@@ -23,6 +36,7 @@ html {
 #smart-table td:nth-child(8) {
     width: 1px;
     white-space: nowrap;
+    text-align: center;
 }
 
 

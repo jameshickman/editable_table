@@ -381,6 +381,7 @@ class EditableTable {
         }
         // Insert form row
         this.#el_edit_form = this.#el_table_body.insertRow(row_index);
+        this.#el_edit_form.classList.add('table__inline-edit-form');
         // Build form cells
         for (let i = 0; i < this.#el_active_row.children.length - 1; i++) {
             const el_cell = document.createElement('TD');
