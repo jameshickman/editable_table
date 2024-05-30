@@ -40,26 +40,22 @@ class EditableTable {
         this.#els_table_headers = el.querySelectorAll("table thead tr th");
         if (typeof cb_saved === 'function') this.#cb_saved = cb_saved;
         if (typeof cb_deleted === 'function') this.#cb_deleted = cb_deleted;
+        this.#fields = {};
+        this.#labels = {
+            "edit": "Edit",
+            "delete": "Delete",
+            "confirm": "Are you sure you want to delete this row?",
+            "save": "Save",
+            "cancel": "Cancel",
+            "yes": "Yes",
+            "no": "No"
+        };
         if (config !== undefined) {
             if (config.hasOwnProperty('fields')) {
                 this.#fields = config.fields;
             }
-            else {
-                this.#fields = {};
-            }
             if (config.hasOwnProperty('labels')) {
                 this.#labels = config.labels;
-            }
-            else {
-                this.#labels = {
-                    "edit": "Edit",
-                    "delete": "Delete",
-                    "confirm": "Are you sure you want to delete this row?",
-                    "save": "Save",
-                    "cancel": "Cancel",
-                    "yes": "Yes",
-                    "no": "No"
-                };
             }
         }
         // Add column for the edit button

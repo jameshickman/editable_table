@@ -21,6 +21,10 @@ html {
     background-color: red !important;
 }
 
+#smart-table {
+    border-collapse: collapse;
+}
+
 #smart-table th:nth-child(1),
 #smart-table th:nth-child(2) {
     display: none;
